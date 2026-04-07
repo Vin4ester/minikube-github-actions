@@ -34,8 +34,9 @@ jobs:
       - name: Test service URLs
         run: |
           minikube service list
-          # Пробрасываем порт на localhost
+          kubectl get pods
+          kubectl logs deployment/nodejs-app
+          kubectl describe pod -l app=nodejs-app
           kubectl port-forward svc/nodejs-app 8080:80 &
           sleep 5
-          # Проверяем через localhost
           curl http://localhost:8080
