@@ -33,11 +33,9 @@ jobs:
 
       - name: Test service URLs
         run: |
-          nohup minikube tunnel &>/tmp/tunnel.log &
-          sleep 5
           minikube service list
-          NODE_PORT=$(kubectl get svc nodejs-app -o jsonpath='{.spec.ports[0].nodePort}')
-          MINIKUBE_IP=$(minikube ip)
-          echo "Minikube IP: $MINIKUBE_IP"
-          echo "Node Port: $NODE_PORT"
-          curl http://$MINIKUBE_IP:$NODE_PORT
+          # Пробрасываем порт на localhost
+          kubectl port-forward svc/nodejs-app 8080:80 &
+          sleep 5
+          # Проверяем через localhost
+          curl http://localhost:8080
